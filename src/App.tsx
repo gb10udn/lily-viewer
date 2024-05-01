@@ -23,7 +23,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Welcome to Tauri!</h1>
+      <h1 className="text-3xl font-bold underline">Welcome to Tauri!</h1>
       <button onClick={fetchAllData}>FETCH ALL DATA</button>
       <SummaryTable tables={tables}/>
     </div>

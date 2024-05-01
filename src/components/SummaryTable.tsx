@@ -4,7 +4,7 @@ type SummaryTableProps = {
   tables: SummaryTask[],
 }
 
-const SummaryTable = (props: SummaryTableProps) => {  // TODO: 240501 css あてて、いい感じのテーブルにすること。
+const SummaryTable = (props: SummaryTableProps) => {  // TODO: 240501 css あてて、いい感じのテーブルにすること。-> Tailwind CSS を使ってみたいのでやってみる！？
   return (
     <table>
       <thead>
@@ -28,8 +28,8 @@ const SummaryTable = (props: SummaryTableProps) => {  // TODO: 240501 css あて
             <td>{tbl.start_date}</td>
             <td>{tbl.end_date}</td>
             <td>{tbl.content}</td>
-          </tr>)
-        )}
+          </tr>
+        ))}
       </tbody>
     </table>
   )
