@@ -12,6 +12,11 @@ function App() {
     setGreetMsg(await invoke("greet", { name }));
   }
 
+  const fetchAllData = async () => {
+    const result = await invoke("retrieve_all_data", {});
+    console.log(result);  // TODO: 240501 結果をフロントエンドで表示せよ。(かっこいいテーブルで表示できると良さそう。)
+  }
+
   return (
     <div className="container">
       <h1>Welcome to Tauri!</h1>
@@ -44,6 +49,8 @@ function App() {
         />
         <button type="submit">Greet</button>
       </form>
+
+      <button onClick={fetchAllData}>TEST</button>
 
       <p>{greetMsg}</p>
     </div>
