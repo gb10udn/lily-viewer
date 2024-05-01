@@ -1,58 +1,55 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+type SummaryTask = {
+  todo_id: number | null,
+  main_class: string | null,
+  sub_class: string | null,
+  start_date: number | null,
+  end_date: number | null,
+  content: string | null,
+}
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
-  }
+function App() {
+  const [tables, setTables] = useState<SummaryTask[]>([]);
 
   const fetchAllData = async () => {
-    const result = await invoke("retrieve_all_data", {});
-    console.log(result);  // TODO: 240501 結果をフロントエンドで表示せよ。(かっこいいテーブルで表示できると良さそう。)
+    const result: SummaryTask[] = await invoke("retrieve_all_data", {});
+    console.log(result);
+    setTables(result);
   }
 
   return (
     <div className="container">
       <h1>Welcome to Tauri!</h1>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-
-      <button onClick={fetchAllData}>TEST</button>
-
-      <p>{greetMsg}</p>
+      <button onClick={fetchAllData}>FETCH ALL DATA</button>
+      <table>
+        <thead>
+          <tr>
+            <th>todo_id</th>
+            <th>content</th>
+            <th>main_class</th>
+            <th>sub_class</th>
+            <th>start_date</th>
+            <th>end_date</th>
+            <th>content</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tables.map((tbl, idx) => (
+            <tr key={idx}>
+              <td>{tbl.todo_id}</td>
+              <td>{tbl.content}</td>
+              <td>{tbl.main_class}</td>
+              <td>{tbl.sub_class}</td>
+              <td>{tbl.start_date}</td>
+              <td>{tbl.end_date}</td>
+              <td>{tbl.content}</td>
+            </tr>)
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }
