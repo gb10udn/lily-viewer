@@ -1,48 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import SummaryTable from './components/SummaryTable.tsx'
+import Search from "./components/Search.tsx";
 
 export type SummaryTask = {
   todo_id: number,
   main_class: string | null,
   sub_class: string | null,
-  start_date: number | null,  // TODO: 240502 yyyy/mm/dd 形式に変換せよ。(フロントエンド？バックエンド？)
-  end_date: number | null,    // TODO: 240502 yyyy/mm/dd 形式に変換せよ。(フロントエンド？バックエンド？)
+  start_date: number | null,  // TODO: 240502 yyyy/mm/dd 形式に変換せよ。(割と時間かかりそうだし、Rust にやらせるべきな気がする。)
+  end_date: number | null,    // TODO: 240502 yyyy/mm/dd 形式に変換せよ。(割と時間かかりそうだし、Rust にやらせるべきな気がする。)
   content: string | null,
 }
 
-function App() {
-  const [tables, setTables] = useState<SummaryTask[]>([]);
+const App = () => {
+  const [tables, setTable] = useState<SummaryTask[]>([]);
+  const [allTable, setAllTable] = useState<SummaryTask[]>([]);
 
-  const fetchAllData = async () => {  // TODO: 240501 検索機能を強化するならば、ここをコンポーネント化せよ。(都度バックエンド呼び出し？フロントで保持する？)
-    const result: SummaryTask[] = await invoke("retrieve_all_data", {});
-    console.log(result);
-    setTables(result);
-  }
+  useEffect(() => {
+    invoke("retrieve_all_data", {}).then(allData => {
+      setTable(allData as SummaryTask[]);  // INFO: 240502 React18 では React.StrictMode の場合、開発環境では２回呼び出されるらしい。(ビルド時は呼ばれないらしい)
+      setAllTable(structuredClone(allData) as SummaryTask[]);
+    });
+  }, []);
 
   return (
     <div className="container mx-auto px-5">
       <h1 className="text-3xl font-bold m-auto py-5">lily-viewer</h1>
-      {/* TODO: 240502 フロントで全データを保持しておいて、テキスト入力すると全結果を返すとかでいいかも？ */}
-      <button
-        onClick={fetchAllData} 
-        className="
-          bg-transparent
-          hover:bg-blue-500
-          text-blue-700
-          font-semibold
-          hover:text-white
-          py-2
-          px-4
-          border
-          border-blue-500
-          hover:border-transparent
-          rounded
-      ">FETCH ALL DATA</button>
+      <Search allData={allTable} setTable={setTable}/>
       <SummaryTable tables={tables}/>
     </div>
-  );
+  )
 }
 
 export default App;
