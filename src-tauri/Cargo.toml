@@ -17,6 +17,7 @@ serde_json = "1"
 dotenv = "0.15.0"
 sqlx = { version = "0.6.2", features = ["runtime-tokio-native-tls", "sqlite"] }
 tokio = { version = "1.20.0", features = ["macros"] }
+chrono = "0.4.38"
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

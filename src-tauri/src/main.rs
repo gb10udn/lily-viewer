@@ -4,11 +4,14 @@ use serde::Serialize;
 use sqlx::{Sqlite, SqlitePool};
 use dotenv;
 use std::env;
+use chrono::{NaiveDate, Datelike};
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+
+fn main() {
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![retrieve_all_data])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }
 
 async fn obtain_db_connection() -> sqlx::Result<sqlx::Pool<Sqlite>> {
@@ -17,7 +20,7 @@ async fn obtain_db_connection() -> sqlx::Result<sqlx::Pool<Sqlite>> {
     Ok(SqlitePool::connect(&db_url).await?)
 }
 
-#[derive(Serialize)]
+#[derive(Debug)]
 struct SummaryTask {
     todo_id: i64,
     main_class: Option<String>,
@@ -27,17 +30,69 @@ struct SummaryTask {
     content: Option<String>,
 }
 
-#[tauri::command]
-async fn retrieve_all_data() -> Vec<SummaryTask> {
-    let db_conn = obtain_db_connection().await.unwrap();
-    sqlx::query_as!(SummaryTask, "SELECT * FROM summary")
-        .fetch_all(&db_conn)
-        .await.unwrap()
+#[derive(Serialize)]
+struct SummaryTaskForFront {
+    todo_id: i64,
+    main_class: Option<String>,
+    sub_class: Option<String>,
+    start_date: Option<i64>,
+    start_date_: Option<String>,
+    end_date: Option<i64>,
+    end_date_: Option<String>,
+    content: Option<String>,
 }
 
-fn main() {
-    tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, retrieve_all_data])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+#[tauri::command]
+async fn retrieve_all_data() -> Vec<SummaryTaskForFront> {
+    let db_conn = obtain_db_connection().await.unwrap();
+    let temp_result = sqlx::query_as!(SummaryTask, "SELECT * FROM summary")
+        .fetch_all(&db_conn)
+        .await.unwrap();
+    
+    let mut result = vec![];
+    for dat in temp_result {
+        let start_date_;
+        if let Some(start_date) = dat.start_date {
+            start_date_ = Some(excel_serial_to_date(start_date));
+        } else {
+            start_date_ = None;
+        }
+
+        let end_date_;
+        if let Some(end_date) = dat.end_date {
+            end_date_ = Some(excel_serial_to_date(end_date));
+        } else {
+            end_date_ = None;
+        }
+
+        result.push(SummaryTaskForFront {  // TODO: 240502 main_class / sub_class でソートした結果を返す？
+            todo_id: dat.todo_id,
+            main_class: dat.main_class,
+            sub_class: dat.sub_class,
+            start_date: dat.start_date,
+            end_date: dat.end_date,
+            content: dat.content,
+            start_date_,
+            end_date_,
+        });
+    }
+    result
+}
+
+fn excel_serial_to_date(serial_value: i64) -> String {
+    let excel_start_date: NaiveDate = NaiveDate::from_ymd_opt(1899, 12, 30).unwrap();
+    let temp_result = excel_start_date + chrono::Duration::days(serial_value.into());
+    format!("{}/{:02}/{:02}", temp_result.year(), temp_result.month(), temp_result.day())
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_excel_serial_to_date() {
+        use crate::excel_serial_to_date;
+        let result = excel_serial_to_date(45414);
+        let expected = String::from("2024/05/02");
+        assert_eq!(result, expected);
+    }
 }

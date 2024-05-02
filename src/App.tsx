@@ -8,8 +8,10 @@ export type SummaryTask = {
   todo_id: number,
   main_class: string | null,
   sub_class: string | null,
-  start_date: number | null,  // TODO: 240502 yyyy/mm/dd 形式に変換せよ。(割と時間かかりそうだし、Rust にやらせるべきな気がする。)
-  end_date: number | null,    // TODO: 240502 yyyy/mm/dd 形式に変換せよ。(割と時間かかりそうだし、Rust にやらせるべきな気がする。)
+  start_date: number | null,
+  start_date_: string | null,
+  end_date: number | null, 
+  end_date_: string | null,
   content: string | null,
 }
 
