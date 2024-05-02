@@ -1,4 +1,20 @@
-# 1. プロジェクト作成 (Vite + React + TypeScript)
+- [1. プロジェクト作成 (Tauri + Vite + React + TypeScript)](#1-プロジェクト作成-tauri--vite--react--typescript)
+  - [1.1. 起動](#11-起動)
+  - [1.2. ビルド (.exe 生成)](#12-ビルド-exe-生成)
+    - [1.2.1. (\*1) エラー (bundle identifier) を設定せよ](#121-1-エラー-bundle-identifier-を設定せよ)
+      - [1.2.1.1. 対処法](#1211-対処法)
+- [2. Tailwind CSS 導入](#2-tailwind-css-導入)
+  - [2.1. Step1: npm でインストール](#21-step1-npm-でインストール)
+  - [2.2. Step2: tailwind.config.js 書き換え](#22-step2-tailwindconfigjs-書き換え)
+  - [2.3. Step3: グローバル css ファイルの書き換え](#23-step3-グローバル-css-ファイルの書き換え)
+  - [2.4. Step4. 確認](#24-step4-確認)
+- [3. 開発中コマンド](#3-開発中コマンド)
+  - [3.1. `npm run tauri dev`](#31-npm-run-tauri-dev)
+  - [3.2. `npm run tauri build`](#32-npm-run-tauri-build)
+
+***
+
+# 1. プロジェクト作成 (Tauri + Vite + React + TypeScript)
 - [Tauri 公式ドキュメント](https://tauri.app/v1/guides/getting-started/setup/vite)
 - `create-tauri-app` を使うのが早い。
   - 但し、どんな設定をしているか等が隠蔽されすぎるからか、公式では、セットアップを理解するためにチュートリアル通り実行することが推奨されていた。
