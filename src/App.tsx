@@ -19,7 +19,7 @@ const App = () => {
 
   useEffect(() => {
     invoke("retrieve_all_data", {}).then(allData => {
-      setTable(allData as SummaryTask[]);  // INFO: 240502 React18 では React.StrictMode の場合、開発環境では２回呼び出されるらしい。(ビルド時は呼ばれないらしい)
+      setTable(allData as SummaryTask[]);  // INFO: 240502 React18 では React.StrictMode の場合、開発環境では２回呼び出される。(ビルド時は呼ばれない)
       setAllTable(structuredClone(allData) as SummaryTask[]);
     });
   }, []);

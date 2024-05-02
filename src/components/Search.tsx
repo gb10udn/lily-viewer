@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { SummaryTask } from '../App.tsx';
 
 type SearchProps = {
@@ -6,16 +7,31 @@ type SearchProps = {
 }
 
 const Search = (props: SearchProps) => {
+  const [searchWord, setSearchWord] = useState<string>('');
 
-  const search = (allData: SummaryTask[], searchWord: string, setTable: React.Dispatch<React.SetStateAction<SummaryTask[]>>) => { 
-    const result: SummaryTask[] = [];
-    for (let i = 0; i < allData.length; i++) {
-      const one = allData[i];
-      if (one.content?.includes(searchWord) === true) {
-        result.push(one);
-      }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      doSearch(props.allData, searchWord, props.setTable);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchWord])
+
+  const doSearch = (allData: SummaryTask[], searchWord: string, setTable: React.Dispatch<React.SetStateAction<SummaryTask[]>>) => {
+    if (allData.length === 0) {
+      return;
     }
-    setTable(result)
+    if (searchWord === '') {
+      setTable(allData);
+    } else {
+      const result: SummaryTask[] = [];
+      for (let i = 0; i < allData.length; i++) {
+        const one = allData[i];
+        if (one.content?.includes(searchWord) === true) {  // TODO: 240502 and / or 検索を実装する。
+          result.push(one);
+        }
+      }
+      setTable(result);
+    }
   }
 
   return (
@@ -23,12 +39,8 @@ const Search = (props: SearchProps) => {
       relative
       h-10
       mt-4
-      sm:w-96
-      xl:w-80
-      2xl:w-96
-      sm:mx-auto
-      lg:m-0"
-    >
+      mb-4
+    ">
       <input className="
           w-full
           h-full
@@ -44,7 +56,8 @@ const Search = (props: SearchProps) => {
         "
         type="text"
         placeholder="Search"
-        onChange={e => search(props.allData, e.target.value, props.setTable)}
+        value={searchWord}
+        onChange={e => setSearchWord(e.target.value)}
       />
     </div>
   )

@@ -10,7 +10,7 @@ const SummaryTable = (props: SummaryTableProps) => {
       <table className=''>
         <thead>
           <tr className='text-left sticky top-0 bg-slate-200 border-b border-slate-300'>
-            <th className='px-4 py-2'>todo_id</th>
+            <th className='px-4 py-2'>id</th>
             <th className='px-4 py-2'>main_class</th>
             <th className='px-4 py-2'>sub_class</th>
             <th className='px-4 py-2'>start_date</th>
