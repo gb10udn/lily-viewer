@@ -66,7 +66,7 @@ async fn retrieve_all_data() -> Vec<SummaryTaskForFront> {
             end_date_ = None;
         }
 
-        result.push(SummaryTaskForFront {  // TODO: 240502 main_class / sub_class でソートした結果を返す？
+        result.push(SummaryTaskForFront {  // TODO: 240502 最初から、main_class / sub_class でソートした結果を返す？
             todo_id: dat.todo_id,
             main_class: dat.main_class,
             sub_class: dat.sub_class,

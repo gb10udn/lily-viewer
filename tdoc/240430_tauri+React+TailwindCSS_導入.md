@@ -7,17 +7,18 @@
   - [2.1. Step1: npm でインストール](#21-step1-npm-でインストール)
   - [2.2. Step2: tailwind.config.js 書き換え](#22-step2-tailwindconfigjs-書き換え)
   - [2.3. Step3: グローバル css ファイルの書き換え](#23-step3-グローバル-css-ファイルの書き換え)
-  - [2.4. Step4. 確認](#24-step4-確認)
+  - [2.4. Step4: 確認](#24-step4-確認)
 - [3. 開発中コマンド](#3-開発中コマンド)
   - [3.1. `npm run tauri dev`](#31-npm-run-tauri-dev)
   - [3.2. `npm run tauri build`](#32-npm-run-tauri-build)
+  - [3.3. `cargo test`](#33-cargo-test)
 
 ***
 
 # 1. プロジェクト作成 (Tauri + Vite + React + TypeScript)
 - [Tauri 公式ドキュメント](https://tauri.app/v1/guides/getting-started/setup/vite)
 - `create-tauri-app` を使うのが早い。
-  - 但し、どんな設定をしているか等が隠蔽されすぎるからか、公式では、セットアップを理解するためにチュートリアル通り実行することが推奨されていた。
+  - 但し、どんな設定をしているか等が隠蔽されすぎるからなのか、公式では、セットアップを理解するためにチュートリアル通り実行して学習することが推奨されていた。
 
 ```bash
 npm create tauri-app@latest
@@ -48,11 +49,11 @@ Error You must change the bundle identifier in `tauri.conf.json > tauri > bundle
 
 #### 1.2.1.1. 対処法
 - `tauri.conf.json` の `identifier` を書き換える。
-  - 内部的にここでアプリを認識してるみたい。`App\Loaming` で `identifier` 名のフォルダが作成され、その中で一時ファイルと見られるものが保存されていた。
+  - 内部的にここでアプリを認識していると思われる。`~\App\Loaming` で `identifier` 名のフォルダが作成され、その中で一時ファイルと見られるものが保存されていた。
 
 
 # 2. Tailwind CSS 導入
-- [【公式】Tailwind CSS](https://tailwindcss.com/docs/guides/vite)
+- [【公式】Tailwind CSS (Vite)](https://tailwindcss.com/docs/guides/vite)
   - Vite のフレームワークの説明ページを参考にした。フレームワーク等によって微妙に異なる点に注意。
   - React + Tauri は導入済み。
 
@@ -69,8 +70,8 @@ npx tailwindcss init -p
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./index.html",                // -> この箇所を追加。React 用に、.tsx 等を有効にした。
-    "./src/**/*.{js,ts,jsx,tsx}",  // -> この箇所を追加。React 用に、.tsx 等を有効にした。
+    "./index.html",                // -> この箇所を追加。
+    "./src/**/*.{js,ts,jsx,tsx}",  // -> この箇所を追加。
   ],
   theme: {
     extend: {},
@@ -89,9 +90,9 @@ module.exports = {
 @tailwind utilities;
 ```
 
-## 2.4. Step4. 確認
-- `npm run tauri dev` を再起動した。(そのままだと反映されなかった気がする。要確認)
-- 以下のように書き換え、状態が変わるかを確認する。
+## 2.4. Step4: 確認
+- `npm run tauri dev` を再起動した。(グローバルの CSS は単に自動リロードだと反映されなかった気がする。要確認。)
+- (確認の一例として) 以下のように書き換え、スタイルが変わるかを確認する。
 ```html
 <h1 className="text-3xl font-bold underline">Welcome to Tauri!</h1>
 ```
@@ -100,10 +101,13 @@ module.exports = {
 
 
 # 3. 開発中コマンド
-- Rust の起動も含まれるが、`cargo` 系を使用しない。
+- Rust の起動も含まれるが、基本的に `cargo` 系を使用しない。
 
 ## 3.1. `npm run tauri dev`
 - 開発サーバー (フロントエンド + バックエンド) 起動。`F12` で devtools も開く。
 
 ## 3.2. `npm run tauri build`
 - `.exe` 生成。
+
+## 3.3. `cargo test`
+- Rust 単体テスト。事前に、`src-tauri` に移動する必要あり。

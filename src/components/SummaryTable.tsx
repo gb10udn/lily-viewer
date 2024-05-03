@@ -6,7 +6,7 @@ type SummaryTableProps = {
 
 const SummaryTable = (props: SummaryTableProps) => {  // TODO: 240502 日付や id でソートできるようにする。
   return (
-    <div className="whitespace-nowrap overflow-auto h-[80vh] w-[100wh] top-0">
+    <div className="whitespace-nowrap overflow-auto h-[80vh] w-[100wh] top-0 rounded-lg">
       <table className=''>
         <thead>
           <tr className='text-left sticky top-0 bg-slate-200 border-b border-slate-300'>
