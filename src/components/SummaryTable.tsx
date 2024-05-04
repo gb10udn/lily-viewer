@@ -12,7 +12,7 @@ type SummaryTableProps = {
   setTable: React.Dispatch<React.SetStateAction<SummaryTask[]>>,
 }
 
-const SummaryTable = (props: SummaryTableProps) => {
+const SummaryTable = (props: SummaryTableProps) => {  // TODO: 240504 全件数が何件で、今アクティブなのが何件みたいな表示をする。
   return (
     <div className="whitespace-nowrap overflow-auto h-[80vh] w-[100wh] top-0 rounded-lg">
       <table className=''>
