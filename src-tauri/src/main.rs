@@ -46,9 +46,17 @@ struct SummaryTaskForFront {
 #[tauri::command]
 async fn retrieve_all_data() -> Vec<SummaryTaskForFront> {
     let db_conn = obtain_db_connection().await.unwrap();
-    let temp_result = sqlx::query_as!(SummaryTask, "SELECT * FROM summary")
+    let mut temp_result = sqlx::query_as!(SummaryTask, "SELECT * FROM summary")
         .fetch_all(&db_conn)
         .await.unwrap();
+
+    temp_result.sort_by(|i, j| {
+        i.main_class.cmp(&j.main_class)
+            .then_with(|| i.sub_class.cmp(&j.sub_class))
+            .then_with(|| i.start_date.cmp(&j.start_date))
+            .then_with(|| i.end_date.cmp(&j.end_date))
+            .then_with(|| i.todo_id.cmp(&j.todo_id))
+    });
     
     let mut result = vec![];
     for dat in temp_result {
@@ -66,7 +74,7 @@ async fn retrieve_all_data() -> Vec<SummaryTaskForFront> {
             end_date_ = None;
         }
 
-        result.push(SummaryTaskForFront {  // TODO: 240502 最初から、main_class / sub_class でソートした結果を返す？
+        result.push(SummaryTaskForFront {
             todo_id: dat.todo_id,
             main_class: dat.main_class,
             sub_class: dat.sub_class,

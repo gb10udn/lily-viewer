@@ -16,7 +16,7 @@ export type SummaryTask = {
 }
 
 const App = () => {
-  const [tables, setTable] = useState<SummaryTask[]>([]);
+  const [table, setTable] = useState<SummaryTask[]>([]);
   const [allTable, setAllTable] = useState<SummaryTask[]>([]);
 
   useEffect(() => {
@@ -30,9 +30,9 @@ const App = () => {
     <div className="container mx-auto px-5">
       <h1 className="text-3xl font-bold m-auto py-5">lily-viewer</h1>
       <Search allData={allTable} setTable={setTable}/>
-      <SummaryTable tables={tables}/>
+      <SummaryTable table={table} setTable={setTable} />
     </div>
-  )
+  );
 }
 
 export default App;
