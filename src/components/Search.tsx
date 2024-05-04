@@ -34,6 +34,9 @@ const Search = (props: SearchProps) => {
     }
   }
 
+  // TODO: 240504 日付でのソート機能を追加する。
+  // TODO: 240504 main_class / sub_class をチェックボックスで抽出できるようにする。
+
   return (
     <div className="relative h-10 mt-4 mb-4">
       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">

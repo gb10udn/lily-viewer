@@ -163,7 +163,7 @@ const sortEndDate = (table: SummaryTask[], setTable: React.Dispatch<React.SetSta
     if (j.end_date === null) {
       return -1;
     }
-    if (start_date_ascending === false) {
+    if (end_date_ascending === false) {
       return i.end_date - j.end_date;
     } else {
       return j.end_date - i.end_date;
