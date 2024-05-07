@@ -30,6 +30,7 @@ const App = () => {
     <div className="container mx-auto px-5">
       <h1 className="text-3xl font-bold m-auto py-5">lily-viewer</h1>
       <Search allData={allTable} setTable={setTable} />
+      <p className="text-right mb-1">{table.length} / {allTable.length}</p>
       <SummaryTable table={table} setTable={setTable} />
     </div>
   );
