@@ -8,33 +8,30 @@ type SearchProps = {
 
 const Search = (props: SearchProps) => {
   const [searchWord, setSearchWord] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      doSearch(props.allData, searchWord, props.setTable);
-    }, 500);
+      doSearchByWord(props.allData, searchWord, props.setTable);
+    }, 100);
     return () => clearTimeout(timer);
-  }, [searchWord])
+  }, [searchWord]);
 
-  const doSearch = (allData: SummaryTask[], searchWord: string, setTable: React.Dispatch<React.SetStateAction<SummaryTask[]>>) => {
-    if (allData.length === 0) {
-      return;
+  useEffect(() => {
+    const startDate_ = convertExcelDate(startDate); 
+    if (startDate_ !== null) {
+      doSearchByStartDate(props.allData, startDate_, props.setTable);
     }
-    if (searchWord === '') {
-      setTable(allData);
-    } else {
-      const result: SummaryTask[] = [];
-      for (let i = 0; i < allData.length; i++) {
-        const one = allData[i];
-        if (one.content?.includes(searchWord) === true) {  // TODO: 240502 and / or 検索を実装する。
-          result.push(one);
-        }
-      }
-      setTable(result);
-    }
-  }
+  }, [startDate]);
 
-  // EDIT: 240504 日付でのソート機能を追加する。
+  useEffect(() => {
+    const endDate_ = convertExcelDate(endDate);
+    if (endDate_ !== null) {
+      doSearchByEndDate(props.allData, endDate_, props.setTable);
+    }
+  }, [endDate]);
+
   // TODO: 240504 main_class / sub_class をチェックボックスで抽出できるようにする。
   
   return (
@@ -55,10 +52,67 @@ const Search = (props: SearchProps) => {
           />
         </div>
       </div>
-      <input type="date" className="p-2 pl-3 text-sm text-gray-900 border border-gray-300 h-full" />
-      <input type="date" className="p-2 pl-3 text-sm text-gray-900 border border-gray-300 rounded-r-lg h-full" />
+      <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="p-2 pl-3 text-sm text-gray-900 border border-gray-300 h-full" />
+      <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="p-2 pl-3 text-sm text-gray-900 border border-gray-300 rounded-r-lg h-full" />
     </div>
   )
+}
+
+const convertExcelDate = (date_str: string): number | null => {
+  const EXCEL_START_DATE = new Date('1899/12/30');
+  const date = new Date(date_str);
+  if (isNaN(date.getTime()) === false) {
+    return Math.floor((date.getTime() - EXCEL_START_DATE.getTime()) / (1000 * 3600 * 24));
+  } else {
+    return null;
+  }
+}
+
+const doSearchByWord = (allData: SummaryTask[], searchWord: string, setTable: React.Dispatch<React.SetStateAction<SummaryTask[]>>) => {
+  if (allData.length === 0) {
+    return;
+  }
+  if (searchWord === '') {
+    setTable(allData);
+  } else {
+    const result: SummaryTask[] = [];
+    for (let i = 0; i < allData.length; i++) {
+      const one = allData[i];
+      if (one.content?.includes(searchWord) === true) {  // TODO: 240502 and / or 検索を実装する。
+        result.push(one);
+      }
+    }
+    setTable(result);
+  }
+}
+
+const doSearchByStartDate = (allData: SummaryTask[], searchStartDate: number, setTable: React.Dispatch<React.SetStateAction<SummaryTask[]>>) => {
+  if (allData.length === 0) {
+    return;
+  }
+
+  const result: SummaryTask[] = [];
+  for (let i = 0; i < allData.length; i++) {
+    const one = allData[i];
+    if (one.end_date !== null && searchStartDate <= one.end_date) {
+      result.push(one);
+    }
+  }
+  setTable(result);
+}
+
+const doSearchByEndDate = (allData: SummaryTask[], searchEndDate: number, setTable: React.Dispatch<React.SetStateAction<SummaryTask[]>>) => {
+  if (allData.length === 0) {
+    return;
+  }
+  const result: SummaryTask[] = [];
+  for (let i = 0; i < allData.length; i++) {
+    const one = allData[i];
+    if (one.start_date !== null && searchEndDate >= one.start_date) {
+      result.push(one);
+    }
+  }
+  setTable(result);
 }
 
 export default Search

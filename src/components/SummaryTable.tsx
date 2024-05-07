@@ -19,7 +19,7 @@ const SummaryTable = (props: SummaryTableProps) => {  // TODO: 240504 全件数�
         <thead>
           <tr className='text-left sticky top-0 bg-slate-200 border-b border-slate-300'>
             <th className='px-4 py-2'>
-              <SortableThDiv sortFunc={sortTodoId} levealName="main_class" table={props.table} setTable={props.setTable} />
+              <SortableThDiv sortFunc={sortTodoId} levealName="id" table={props.table} setTable={props.setTable} />
             </th>
 
             <th className="px-4 py-2">

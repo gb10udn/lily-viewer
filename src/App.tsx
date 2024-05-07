@@ -29,7 +29,7 @@ const App = () => {
   return (
     <div className="container mx-auto px-5">
       <h1 className="text-3xl font-bold m-auto py-5">lily-viewer</h1>
-      <Search allData={allTable} setTable={setTable}/>
+      <Search allData={allTable} setTable={setTable} />
       <SummaryTable table={table} setTable={setTable} />
     </div>
   );
